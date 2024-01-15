@@ -37,7 +37,7 @@ app.post('/posts/:id/comments',
 
     const id = randomBytes(4).toString('hex')
     const { content } = req.body
-    const comment = { id, content, post_id, status: 'pending' };
+    const comment = { id, content, post_id, status: 'en attente' };
 
     await DB_POOL.promise().query('INSERT INTO comments SET ?', comment);
 

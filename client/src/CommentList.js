@@ -9,9 +9,9 @@ const CommentList = ({ comments }) => {
           style={{
             fontWeight: 'bold',
             color: `${
-              comment.comment_status === "pending"
+              comment.comment_status === "en attente"
                 ? "orange"
-                : comment.comment_status === "approved"
+                : comment.comment_status === "approuvé"
                 ? "green"
                 : "red"
             }`,

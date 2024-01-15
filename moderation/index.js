@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 const handleEvent = async (eventPayload) => {
   if (eventPayload.event_name === 'CommentCreated') {
     const data = eventPayload.event_data
-    const status = data.content.includes('orange') ? 'rejected' : 'approved'
+    const status = data.content.includes('brute') ? 'rejeté' : 'approuvé'
 
     try {
       await axios.post('http://event-bus:4005/events', {
@@ -26,7 +26,7 @@ const handleEvent = async (eventPayload) => {
       await axios.post(`http://event-bus:4005/events/fail`, { eventId: eventPayload.id });
     }
   }
-} 
+}
 
 app.post("/events", async (req, res) => {
 
@@ -36,7 +36,7 @@ app.post("/events", async (req, res) => {
     const comment = event_payload.event_data;
 
     if (event_payload.event_name === 'CommentCreated') {
-      const status = comment.content.includes('orange') ? 'rejected' : 'approved'
+      const status = comment.content.includes('brute') ? 'rejeté' : 'approuvé'
 
       try {
         await axios.post('http://event-bus:4005/events', {
