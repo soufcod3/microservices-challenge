@@ -17,7 +17,6 @@ app.use(bodyParser.json())
 app.use(cors())
 
 const handleEvent = async (eventPayload) => {
-    console.log('eventPayload in handleEvent', eventPayload)
     const { event_name: type, event_data: data } = eventPayload
 
     if (type === 'PostCreated') {
@@ -104,7 +103,6 @@ app.listen(4002, async () => {
     const res = await axios.get('http://event-bus:4005/events')
     const {event_payloads} = res.data;
     
-    console.log('Missed events while service down', res.data);
     for (const payload of event_payloads) {
       await handleEvent(payload);
     }
