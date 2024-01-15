@@ -1,0 +1,120 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile
+    command: /bin/bash -c "while sleep 1000; do :; done"
+    working_dir: /home/app
+    networks:
+      - api-network
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/home/app:cached
+
+  comments:
+    build:
+      context: .
+      dockerfile: ./comments/docker/Dockerfile
+    command: /bin/bash -c "while sleep 1000; do :; done"
+    working_dir: /home/comments
+    networks:
+      - api-network
+    ports:
+      - "4001:4001"
+    volumes:
+      - ./comments:/home/comments:cached
+      - ./dbms/ddl/init-comments.sql:/home/dbms/ddl/init.sql:cached
+      - ./dbms/ddl/ddl-comments.sql:/home/dbms/ddl/ddl.sql:cached
+
+  event-bus:
+    build:
+      context: .
+      dockerfile: ./event-bus/docker/Dockerfile
+    command: /bin/bash -c "while sleep 1000; do :; done"
+    working_dir: /home/event-bus
+    networks:
+      - api-network
+    ports:
+      - "4005:4005"
+    volumes:
+      - ./event-bus:/home/event-bus:cached
+
+  moderation:
+    build:
+      context: .
+      dockerfile: ./moderation/docker/Dockerfile
+    command: /bin/bash -c "while sleep 1000; do :; done"
+    working_dir: /home/moderation
+    networks:
+      - api-network
+    ports:
+      - "4003:4003"
+    volumes:
+      - ./moderation:/home/moderation:cached
+
+  posts:
+    build:
+      context: .
+      dockerfile: ./posts/docker/Dockerfile
+    command: /bin/bash -c "while sleep 1000; do :; done"
+    working_dir: /home/posts
+    networks:
+      - api-network
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./posts:/home/posts:cached
+      - ./dbms/ddl/init-posts.sql:/home/dbms/ddl/init.sql:cached
+      - ./dbms/ddl/ddl-posts.sql:/home/dbms/ddl/ddl.sql:cached
+
+  query:
+    build:
+      context: .
+      dockerfile: ./query/docker/Dockerfile
+    command: /bin/bash -c "while sleep 1000; do :; done"
+    working_dir: /home/query
+    networks:
+      - api-network
+    ports:
+      - "4002:4002"
+    volumes:
+      - ./query:/home/query:cached
+      - ./dbms/ddl/init-query.sql:/home/dbms/ddl/init.sql:cached
+      - ./dbms/ddl/ddl-query.sql:/home/dbms/ddl/ddl.sql:cached
+
+  proxy:
+    image: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    volumes:
+      - ./nginx/api-dev.nginx.conf:/etc/nginx/conf.d/api.nginx.conf
+    networks:
+      - api-network
+
+  dbms:
+    image: mariadb:10
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=false
+      - MYSQL_ROOT_PASSWORD=rootpassword
+    command: [
+      "--character-set-server=utf8mb4",
+      "--collation-server=utf8mb4_unicode_ci",
+    ]
+    volumes:
+      - ./dbms/mariadb.cnf:/etc/mysql/mariadb.cnf
+      - ./dbms/dbms-data:/var/lib/mysql
+    networks:
+      - api-network
+
+networks:
+  api-network:
+    driver: bridge
+    name: api-network
