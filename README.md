@@ -37,6 +37,9 @@ For each service, you should run this command to setup its database :
 make start_db
 ```
 
+- Username : root
+- Password : rootpassword
+
 5. Start our services !
 
 Now that all the services needing a database got one, we can launch our app!
