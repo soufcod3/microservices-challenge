@@ -30,9 +30,9 @@ const PostList = () => {
         key={post.id}
       >
         <div className="card-body">
-          <h3>{post.post_title}</h3>
+          <h3>{post.title}</h3>
           <CommentList comments={post.comments} />
-          <CommentCreate postId={post.post_id} />
+          <CommentCreate postId={post.id} />
         </div>
       </div>
     );
