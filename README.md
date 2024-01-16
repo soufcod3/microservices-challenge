@@ -26,32 +26,35 @@ cd ./microservices-challenge
 
 3. Run docker-compose.yml file
 
-Check that you already got Docker Desktop running on your machine. Then:
 ```sh
-docker compose up --build
+docker compose up -d
 ```
 
-4. Initialise databases for each service that needs one 
+4. Initialize databases for each service that needs one
 
-The services in question are ```posts```, ```comments``` and ```queries```.
-Thanks to our docker-compose.yml file and Makefiles, it should be pretty simple.
+Some services need a database : ```posts```, ```comments``` and ```queries```
+Go inside each of them by running :
+```sh
+docker exec -it <SERVICE_CONTAINER_ID> /bin/bash
+```
+(use ```docker ps``` command to find the container id)
 
-Let's use our terminal again. If you take a look at ./Makefile, you'll see that you can simple open a shell for these services.
+Now in each service terminal, execute this to initialise the database :
 
-So do it for ```posts```, ```comments``` and ```queries``` services in seperate terminals.
-For each service, you should run this command to setup its database :
 ```sh
 make start_db
 ```
 
-- Username : root
-- Password : rootpassword
+You'll need to enter twice the password ```rootpassword``` for each service.
+
+For ```posts```, ```comments``` and ```queries``` services, do this.
 
 5. Start our services !
 
 Now that all the services needing a database got one, we can launch our app!
-To do so, use the ./Makefile and open a shell for all the others services too.
-Shouldn't need to mention it but just in case :
+You need to go inside these service containers : ```event-bus```, ```posts```, ```comments```, ```moderation```, ```queries``` and of course our client ```app```
+
+and execute this :
 ```sh
 npm install && npm start
 ```
