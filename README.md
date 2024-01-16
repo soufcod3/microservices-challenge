@@ -6,6 +6,13 @@ Take a look at how the event-bus works and make the moderation :
 - retreive all the available events
 - properly handle them
 
+**How to know if I've successfully reached the goal of the exercice :**
+- Turn down the Moderation service
+- Add one or multiple comments to a post
+- Turn the Moderation service back on
+- The new comments should be processed immediately (their status should change)
+
+
 ### Get ready
 1. Clone this repository :
 ```sh
